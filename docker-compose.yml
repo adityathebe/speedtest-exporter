@@ -1,0 +1,13 @@
+services:
+  speedtest-exporter:
+    build: .
+    image: ghcr.io/adityathebe/speedtest-exporter:local
+    environment:
+      REFRESH_INTERVAL: ${REFRESH_INTERVAL:-3600}
+      LISTEN_PORT: ${LISTEN_PORT:-7777}
+      SERVER_ID: ${SERVER_ID:--1}
+      SERVER_FALLBACK: ${SERVER_FALLBACK:-false}
+      LOG_LEVEL: DEBUG
+    ports:
+      - '7777:7777'
+    restart: unless-stopped
