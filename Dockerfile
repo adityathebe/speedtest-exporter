@@ -7,10 +7,9 @@ RUN go mod download
 COPY . .
 RUN make build
 
-FROM alpine:3.20
-RUN apk add --no-cache ca-certificates
+FROM gcr.io/distroless/static-debian12:nonroot
 
-COPY --from=builder /src/bin/speedtest-exporter /usr/local/bin/speedtest-exporter
+COPY --from=builder /src/bin/speedtest-exporter /speedtest-exporter
 
 EXPOSE 7777
-ENTRYPOINT ["/usr/local/bin/speedtest-exporter"]
+ENTRYPOINT ["/speedtest-exporter"]
