@@ -3,6 +3,8 @@ A [Speedtest](https://www.speedtest.net) exporter for Prometheus.
 [![Latest release](https://img.shields.io/github/v/release/adityathebe/speedtest-exporter)](https://github.com/adityathebe/speedtest-exporter/releases)
 [![Docker Pulls](https://img.shields.io/badge/GHCR-adityathebe/speedtest--exporter-blue)](https://ghcr.io/adityathebe/speedtest-exporter)
 
+## ![Grafana dashboard](./monitoring/grafana_dashboard.png)
+
 ## Exported Metrics
 
 ```
@@ -24,7 +26,5 @@ A [Speedtest](https://www.speedtest.net) exporter for Prometheus.
 # HELP speedtest_upload_speed_bytes_per_second Last upload speedtest result
 # TYPE speedtest_upload_speed_bytes_per_second gauge
 ```
-
----
 
 **Acknowledgments:** This project is built upon [danopstech/speedtest_exporter](https://github.com/danopstech/speedtest_exporter).
