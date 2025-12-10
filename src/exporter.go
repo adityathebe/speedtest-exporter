@@ -166,21 +166,22 @@ func (e *Exporter) Ready() bool {
 }
 
 func (e *Exporter) runSpeedtest(ctx context.Context, testUUID string, latencyMetric, jitterMetric, uploadMetric, downloadMetric **prometheus.Metric) error {
+	client := speedtest.New()
+
 	logger.Debug("Fetching user information")
-	user, err := speedtest.FetchUserInfoContext(ctx)
+	user, err := client.FetchUserInfoContext(ctx)
 	if err != nil {
 		return fmt.Errorf("could not fetch user information: %w", err)
 	}
 
 	logger.Debug("Fetching server list")
-	serverList, err := speedtest.FetchServerListContext(ctx)
+	serverList, err := client.FetchServerListContext(ctx)
 	if err != nil {
 		return fmt.Errorf("could not fetch server list: %w", err)
 	}
 	logger.Debug("Server list fetched", "count", len(serverList))
 
 	var server *speedtest.Server
-
 	if e.serverID == -1 {
 		if len(serverList) == 0 {
 			return fmt.Errorf("no servers available")
