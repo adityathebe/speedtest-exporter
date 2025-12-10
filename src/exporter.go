@@ -7,7 +7,6 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/showwin/speedtest-go/speedtest"
 )
@@ -20,42 +19,41 @@ var (
 	up = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "up"),
 		"Was the last speedtest successful.",
-		[]string{"test_uuid"}, nil,
+		nil, nil,
 	)
 	scrapeDurationSeconds = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "scrape_duration_seconds"),
 		"Time to preform last speed test",
-		[]string{"test_uuid"}, nil,
+		nil, nil,
 	)
 	latency = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "latency_milliseconds"),
 		"Measured latency on last speed test in milliseconds",
-		[]string{"test_uuid", "user_lat", "user_lon", "user_ip", "user_isp", "server_lat", "server_lon", "server_id", "server_name", "server_country", "distance"},
+		[]string{"user_lat", "user_lon", "user_ip", "user_isp", "server_lat", "server_lon", "server_id", "server_name", "server_country", "distance"},
 		nil,
 	)
 	jitter = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "jitter_milliseconds"),
 		"Measured jitter on last speed test in milliseconds",
-		[]string{"test_uuid", "user_lat", "user_lon", "user_ip", "user_isp", "server_lat", "server_lon", "server_id", "server_name", "server_country", "distance"},
+		[]string{"user_lat", "user_lon", "user_ip", "user_isp", "server_lat", "server_lon", "server_id", "server_name", "server_country", "distance"},
 		nil,
 	)
 	upload = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "upload_speed_bytes_per_second"),
 		"Last upload speedtest result",
-		[]string{"test_uuid", "user_lat", "user_lon", "user_ip", "user_isp", "server_lat", "server_lon", "server_id", "server_name", "server_country", "distance"},
+		[]string{"user_lat", "user_lon", "user_ip", "user_isp", "server_lat", "server_lon", "server_id", "server_name", "server_country", "distance"},
 		nil,
 	)
 	download = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "", "download_speed_bytes_per_second"),
 		"Last download speedtest result",
-		[]string{"test_uuid", "user_lat", "user_lon", "user_ip", "user_isp", "server_lat", "server_lon", "server_id", "server_name", "server_country", "distance"},
+		[]string{"user_lat", "user_lon", "user_ip", "user_isp", "server_lat", "server_lon", "server_id", "server_name", "server_country", "distance"},
 		nil,
 	)
 )
 
 // cachedMetrics holds the cached speedtest results
 type cachedMetrics struct {
-	testUUID     string
 	duration     float64
 	success      bool
 	latencyData  *prometheus.Metric
@@ -106,11 +104,9 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	if e.cache.success {
 		ch <- prometheus.MustNewConstMetric(
 			up, prometheus.GaugeValue, 1.0,
-			e.cache.testUUID,
 		)
 		ch <- prometheus.MustNewConstMetric(
 			scrapeDurationSeconds, prometheus.GaugeValue, e.cache.duration,
-			e.cache.testUUID,
 		)
 		if e.cache.latencyData != nil {
 			ch <- *e.cache.latencyData
@@ -127,23 +123,20 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	} else {
 		ch <- prometheus.MustNewConstMetric(
 			up, prometheus.GaugeValue, 0.0,
-			e.cache.testUUID,
 		)
 	}
 }
 
 // Refresh runs a speedtest and updates the cached metrics
 func (e *Exporter) Refresh(ctx context.Context) error {
-	testUUID := uuid.New().String()
 	start := time.Now()
 
 	var latencyMetric, jitterMetric, uploadMetric, downloadMetric *prometheus.Metric
-	if err := e.runSpeedtest(ctx, testUUID, &latencyMetric, &jitterMetric, &uploadMetric, &downloadMetric); err != nil {
+	if err := e.runSpeedtest(ctx, &latencyMetric, &jitterMetric, &uploadMetric, &downloadMetric); err != nil {
 		return err
 	}
 
 	cache := cachedMetrics{
-		testUUID:     testUUID,
 		duration:     time.Since(start).Seconds(),
 		success:      true,
 		latencyData:  latencyMetric,
@@ -165,7 +158,7 @@ func (e *Exporter) Ready() bool {
 	return e.ready.Load()
 }
 
-func (e *Exporter) runSpeedtest(ctx context.Context, testUUID string, latencyMetric, jitterMetric, uploadMetric, downloadMetric **prometheus.Metric) error {
+func (e *Exporter) runSpeedtest(ctx context.Context, latencyMetric, jitterMetric, uploadMetric, downloadMetric **prometheus.Metric) error {
 	client := speedtest.New()
 
 	logger.Debug("Fetching user information")
@@ -241,7 +234,6 @@ func (e *Exporter) runSpeedtest(ctx context.Context, testUUID string, latencyMet
 	// Create metrics
 	latencyMetricValue := prometheus.MustNewConstMetric(
 		latency, prometheus.GaugeValue, float64(server.Latency.Milliseconds()),
-		testUUID,
 		user.Lat,
 		user.Lon,
 		user.IP,
@@ -257,7 +249,6 @@ func (e *Exporter) runSpeedtest(ctx context.Context, testUUID string, latencyMet
 
 	jitterMetricValue := prometheus.MustNewConstMetric(
 		jitter, prometheus.GaugeValue, float64(server.Jitter.Milliseconds()),
-		testUUID,
 		user.Lat,
 		user.Lon,
 		user.IP,
@@ -273,7 +264,6 @@ func (e *Exporter) runSpeedtest(ctx context.Context, testUUID string, latencyMet
 
 	downloadMetricValue := prometheus.MustNewConstMetric(
 		download, prometheus.GaugeValue, float64(server.DLSpeed),
-		testUUID,
 		user.Lat,
 		user.Lon,
 		user.IP,
@@ -289,7 +279,6 @@ func (e *Exporter) runSpeedtest(ctx context.Context, testUUID string, latencyMet
 
 	uploadMetricValue := prometheus.MustNewConstMetric(
 		upload, prometheus.GaugeValue, float64(server.ULSpeed),
-		testUUID,
 		user.Lat,
 		user.Lon,
 		user.IP,

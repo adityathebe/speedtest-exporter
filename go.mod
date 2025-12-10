@@ -3,7 +3,6 @@ module github.com/adityathebe/speedtest-exporter
 go 1.25.4
 
 require (
-	github.com/google/uuid v1.6.0
 	github.com/prometheus/client_golang v1.23.2
 	github.com/showwin/speedtest-go v1.7.10
 )
