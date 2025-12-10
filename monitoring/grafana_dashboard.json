@@ -233,7 +233,7 @@
         },
         {
           "exemplar": true,
-          "expr": "avg(avg_over_time(speedtest_download_speed_bytes_per_second[1w:5m]))",
+          "expr": "avg(avg_over_time(speedtest_download_speed_bytes_per_second{user_isp=\"$ISP\"}[1w:5m]))",
           "hide": false,
           "interval": "",
           "legendFormat": "Avg",
@@ -305,7 +305,7 @@
         },
         {
           "exemplar": true,
-          "expr": "avg(avg_over_time(speedtest_upload_speed_bytes_per_second[1w:5m]))",
+          "expr": "avg(avg_over_time(speedtest_upload_speed_bytes_per_second{user_isp=\"$ISP\"}[1w:5m]))",
           "hide": false,
           "interval": "",
           "legendFormat": "Avg",
@@ -377,7 +377,7 @@
         },
         {
           "exemplar": true,
-          "expr": "avg(avg_over_time(speedtest_latency_milliseconds[1w:5m]))",
+          "expr": "avg(avg_over_time(speedtest_latency_milliseconds{user_isp=\"$ISP\"}[1w:5m]))",
           "hide": false,
           "interval": "",
           "legendFormat": "Avg",
@@ -750,7 +750,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "speedtest_download_speed_bytes_per_second",
+          "expr": "speedtest_download_speed_bytes_per_second{user_isp=\"$ISP\"}",
           "format": "table",
           "interval": "",
           "legendFormat": "",
@@ -759,7 +759,7 @@
         },
         {
           "exemplar": true,
-          "expr": "speedtest_upload_speed_bytes_per_second",
+          "expr": "speedtest_upload_speed_bytes_per_second{user_isp=\"$ISP\"}",
           "format": "table",
           "hide": false,
           "interval": "",
@@ -768,7 +768,7 @@
         },
         {
           "exemplar": true,
-          "expr": "speedtest_latency_milliseconds",
+          "expr": "speedtest_latency_milliseconds{user_isp=\"$ISP\"}",
           "format": "table",
           "hide": false,
           "interval": "",
@@ -777,7 +777,7 @@
         },
         {
           "exemplar": true,
-          "expr": "speedtest_jitter_milliseconds",
+          "expr": "speedtest_jitter_milliseconds{user_isp=\"$ISP\"}",
           "format": "table",
           "hide": false,
           "interval": "",
