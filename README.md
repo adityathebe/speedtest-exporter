@@ -27,4 +27,26 @@ A [Speedtest](https://www.speedtest.net) exporter for Prometheus.
 # TYPE speedtest_upload_speed_bytes_per_second gauge
 ```
 
+## Configuration
+
+The exporter can be configured using the following environment variables:
+
+| Variable           | Description                                                            | Default | Example |
+| ------------------ | ---------------------------------------------------------------------- | ------- | ------- |
+| `LISTEN_PORT`      | Port on which the exporter listens                                     | `7777`  | `8080`  |
+| `REFRESH_INTERVAL` | Interval between speedtests in seconds                                 | `3600`  | `1800`  |
+| `SERVER_ID`        | Specific Speedtest server ID to use. Use `-1` for auto-select          | `-1`    | `12345` |
+| `SERVER_FALLBACK`  | Allow fallback to other servers if the specified server is unavailable | `false` | `true`  |
+| `LOG_LEVEL`        | Logging level (DEBUG, INFO, WARN, ERROR)                               | `INFO`  | `DEBUG` |
+
+### Example Usage
+
+```bash
+docker run -d \
+  -p 7777:7777 \
+  -e REFRESH_INTERVAL=1800 \
+  -e LOG_LEVEL=DEBUG \
+  ghcr.io/adityathebe/speedtest-exporter:latest
+```
+
 **Acknowledgments:** This project is built upon [danopstech/speedtest_exporter](https://github.com/danopstech/speedtest_exporter).
