@@ -16,7 +16,10 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-var logger *slog.Logger
+var (
+	logger  *slog.Logger
+	version = "dev"
+)
 
 func getEnv(key, defaultValue string) string {
 	if value := os.Getenv(key); value != "" {
@@ -121,7 +124,7 @@ func main() {
 		IdleTimeout:  60 * time.Second,
 	}
 
-	logger.Info("Starting Speedtest Exporter", "port", port, "refresh_interval_seconds", refreshInterval)
+	logger.Info("Starting Speedtest Exporter", "version", version, "port", port, "refresh_interval_seconds", refreshInterval)
 
 	go func() {
 		if err := server.ListenAndServe(); err != nil {

@@ -1,0 +1,42 @@
+version: 2
+project_name: speedtest-exporter
+
+builds:
+  - id: speedtest-exporter
+    main: ./src
+    binary: speedtest-exporter
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X main.version={{ .Tag }}
+    mod_timestamp: '{{ .CommitTimestamp }}'
+
+archives:
+  - id: release-archives
+    ids: [speedtest-exporter]
+    formats: tar.gz
+    name_template: '{{ .ProjectName }}_{{ .Tag }}_{{ .Os }}_{{ .Arch }}'
+    files:
+      - LICENSE
+      - README.md
+
+checksum:
+  name_template: '{{ .ProjectName }}_{{ .Tag }}_checksums.txt'
+
+dockers_v2:
+  - id: docker-amd64
+    images:
+      - ghcr.io/adityathebe/speedtest-exporter
+    tags:
+      - 'v{{ .Version }}'
+      - '{{ if not .IsNightly }}latest{{ end }}'
+    platforms:
+      - linux/amd64
+      - linux/arm64
