@@ -36,7 +36,6 @@ checksum:
 dockers_v2:
   - dockerfile: goreleaser.dockerfile
     images:
-      - adityatheb/speedtest-exporter
       - ghcr.io/adityathebe/speedtest-exporter
     tags:
       - 'v{{ .Version }}'
