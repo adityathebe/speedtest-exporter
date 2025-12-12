@@ -1,5 +1,8 @@
 FROM golang:1.25.5-bookworm AS builder
 
+ARG VERSION=dev
+ENV VERSION=${VERSION}
+
 WORKDIR /src
 COPY go.mod ./
 RUN go mod download

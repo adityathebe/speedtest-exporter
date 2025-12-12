@@ -16,7 +16,7 @@ all: build
 
 build:
 	mkdir -p bin
-	CGO_ENABLED=0 $(GO) build -o bin/speedtest-exporter ./src
+	CGO_ENABLED=0 $(GO) build -o bin/speedtest-exporter -ldflags "-X main.version=$(VERSION_TAG)" ./src
 
 docker:
 	$(DOCKER) build -t $(IMAGE):$(TAG) .

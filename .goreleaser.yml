@@ -23,6 +23,9 @@ archives:
     ids: [speedtest-exporter]
     formats: tar.gz
     name_template: '{{ .ProjectName }}_{{ .Tag }}_{{ .Os }}_{{ .Arch }}'
+    format_overrides:
+      - goos: windows
+        format: zip
     files:
       - LICENSE
       - README.md
@@ -35,8 +38,10 @@ dockers_v2:
     images:
       - ghcr.io/adityathebe/speedtest-exporter
     tags:
-      - 'v{{ .Version }}'
+      - '{{ .Tag }}'
       - '{{ if not .IsNightly }}latest{{ end }}'
+    build_args:
+      VERSION: '{{ .Tag }}'
     platforms:
       - linux/amd64
       - linux/arm64
