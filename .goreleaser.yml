@@ -44,6 +44,7 @@ dockers_v2:
       VERSION: '{{ .Tag }}'
     labels:
       'org.opencontainers.image.created': '{{.Date}}'
+      'org.opencontainers.image.description': 'A Prometheus exporter that periodically runs internet speed tests and exposes network performance metrics'
       'org.opencontainers.image.name': '{{.ProjectName}}'
       'org.opencontainers.image.revision': '{{.FullCommit}}'
       'org.opencontainers.image.version': '{{.Version}}'
