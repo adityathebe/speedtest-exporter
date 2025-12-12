@@ -25,7 +25,7 @@ archives:
     name_template: '{{ .ProjectName }}_{{ .Tag }}_{{ .Os }}_{{ .Arch }}'
     format_overrides:
       - goos: windows
-        format: zip
+        formats: zip
     files:
       - LICENSE
       - README.md
