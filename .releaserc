@@ -12,17 +12,3 @@ plugins:
       parserOpts:
         noteKeywords:
           - MAJOR RELEASE
-  - '@semantic-release/release-notes-generator'
-  - - '@semantic-release/github'
-    - assets:
-        - path: ./.release/speedtest-exporter_linux_amd64
-          name: speedtest-exporter_linux_amd64
-        - path: ./.release/speedtest-exporter_linux_arm64
-          name: speedtest-exporter_linux_arm64
-        - path: ./.release/speedtest-exporter_darwin_amd64
-          name: speedtest-exporter_darwin_amd64
-        - path: ./.release/speedtest-exporter_darwin_arm64
-          name: speedtest-exporter_darwin_arm64
-      # From: https://github.com/semantic-release/github/pull/487#issuecomment-1486298997
-      successComment: false
-      failTitle: false
