@@ -34,14 +34,21 @@ checksum:
   name_template: '{{ .ProjectName }}_{{ .Tag }}_checksums.txt'
 
 dockers_v2:
-  - id: docker-amd64
+  - dockerfile: goreleaser.dockerfile
     images:
+      - adityatheb/speedtest-exporter
       - ghcr.io/adityathebe/speedtest-exporter
     tags:
-      - '{{ .Tag }}'
+      - 'v{{ .Version }}'
       - '{{ if not .IsNightly }}latest{{ end }}'
     build_args:
       VERSION: '{{ .Tag }}'
+    labels:
+      'org.opencontainers.image.created': '{{.Date}}'
+      'org.opencontainers.image.name': '{{.ProjectName}}'
+      'org.opencontainers.image.revision': '{{.FullCommit}}'
+      'org.opencontainers.image.version': '{{.Version}}'
+      'org.opencontainers.image.source': '{{.GitURL}}'
     platforms:
       - linux/amd64
       - linux/arm64
